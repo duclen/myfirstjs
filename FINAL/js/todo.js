@@ -31,7 +31,10 @@ function paintTodo(newTodo){
 
 function handleTodoSubmit(event){
     event.preventDefault();
-    const newTodo = todoInput.value;
+    const newTodo = todoInput.value.trim();
+    if (newTodo === "") {
+        return;
+    }
     todoInput.value = "";
     const newTodoObj = {
         text: newTodo,
@@ -42,7 +45,9 @@ function handleTodoSubmit(event){
     saveTodos();
 }
 
-todoForm.addEventListener("submit", handleTodoSubmit);
+if (todoForm) {
+    todoForm.addEventListener("submit", handleTodoSubmit);
+}
 
 const savedTodos = localStorage.getItem(TODOS_KEY);
 if (savedTodos !== null){

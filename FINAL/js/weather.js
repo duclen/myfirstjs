@@ -1,21 +1,34 @@
-const API_KEY = "87ec99017e2bf7dc16de008b913c41fe";
+const API_KEY = "72d9e95a29a84d7aaf882139250412";
 
-function onGeoSuccess(position){
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+function getWeather(query){
+    const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${query}&lang=ko`;
+
     fetch(url)
         .then((response) => response.json())
         .then((data) => {
             const weather = document.querySelector("#weather span:first-child");
             const city = document.querySelector("#weather span:last-child");
-            weather.innerText = `${data.weather[0].main} / ${data.main.temp}°C`;
-            city.innerText = data.name;
+            weather.innerText = `${data.current.condition.text} / ${data.current.temp_c}°C`;
+            city.innerText = data.location.name;
+        })
+        .catch((error) => {
+            console.error("Weather API Error:", error);
+            const weather = document.querySelector("#weather span:first-child");
+            const city = document.querySelector("#weather span:last-child");
+            weather.innerText = "Weather unavailable";
+            city.innerText = "Location unknown";
         });
 }
 
+function onGeoSuccess(position){
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    getWeather(`${lat},${lon}`);
+}
+
 function onGeoError(){
-    alert("Couldn't find you. No weather info for you.");
+    // 위치 권한 거부 시 서울 날씨 표시
+    getWeather("Seoul");
 }
 
 navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
