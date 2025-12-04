@@ -1,19 +1,25 @@
 const loginForm = document.querySelector("#login-form");
 const loginInput = document.querySelector("#login-form input");
 const loginGreeting = document.querySelector("#greeting");
-    const HIDDEN_CLASSNAME = "hidden";
+const todoForm = document.querySelector("#todo-form");
+const HIDDEN_CLASSNAME = "hidden";
 
-function onLogin(tomato){
-    tomato.preventDefault();
+function onLogin(event){
+    event.preventDefault();
     const username = loginInput.value;
-    greeting.innerText = "Hello " + username;
-    greeting.classList.remove(HIDDEN_CLASSNAME);
+    loginGreeting.innerText = `Hello, ${username}! 👋`;
+    loginGreeting.classList.remove(HIDDEN_CLASSNAME);
+    todoForm.classList.remove(HIDDEN_CLASSNAME);
     localStorage.setItem("username", username);
     loginForm.classList.add(HIDDEN_CLASSNAME);
 }
 
-
 loginForm.addEventListener("submit", onLogin);
 
 const savedUsername = localStorage.getItem("username");
-console.log(savedUsername);
+if (savedUsername !== null) {
+    loginGreeting.innerText = `Hello, ${savedUsername}! 👋`;
+    loginGreeting.classList.remove(HIDDEN_CLASSNAME);
+    todoForm.classList.remove(HIDDEN_CLASSNAME);
+    loginForm.classList.add(HIDDEN_CLASSNAME);
+}
